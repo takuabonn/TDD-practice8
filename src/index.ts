@@ -2,7 +2,7 @@ interface PinPosition {
   [key: number]: number[];
 }
 class Split {
-  private pinsCondition: string;
+  private pinsCondition: number[];
   private pinPosition: PinPosition = {
     1: [7],
     2: [4],
@@ -13,7 +13,7 @@ class Split {
     7: [10],
   };
 
-  constructor(pinsCondition: string) {
+  constructor(pinsCondition: number[]) {
     this.pinsCondition = pinsCondition;
   }
 
@@ -22,7 +22,9 @@ class Split {
   };
 
   splitJude = () => {
-    return "No";
+    if (!this.pinsCondition[0]) {
+      return "No";
+    }
   };
 }
 

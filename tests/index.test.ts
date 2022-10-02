@@ -1,7 +1,8 @@
 import Split from "../src";
 
 test("ボーリングのピンと列の位置を紐付ける", () => {
-  const split = new Split("0101110101");
+  const pinsCondition = [0, 1, 0, 1, 1, 1, 0, 1, 0, 1];
+  const split = new Split(pinsCondition);
   const pinPosition = split.getPinPosition();
   expect(pinPosition[1]).toEqual(expect.arrayContaining([7]));
   expect(pinPosition[2]).toEqual(expect.arrayContaining([4]));
@@ -14,7 +15,8 @@ test("ボーリングのピンと列の位置を紐付ける", () => {
 
 describe("split", () => {
   test("1番目のピンが倒れていなかったらNO", () => {
-    const split = new Split("1101110101");
+    const pinsCondition = [0, 1, 0, 1, 1, 1, 0, 1, 0, 1];
+    const split = new Split(pinsCondition);
     expect(split.splitJude()).toBe("No");
   });
 });
