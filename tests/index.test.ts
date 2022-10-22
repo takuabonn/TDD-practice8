@@ -17,9 +17,9 @@ describe("split", () => {
     const split = new Split(s);
     expect(split.jude()).toBe("Yes");
   });
-  // test("1 番目のピンが倒れていたら次のピンで左方向でSplitだったらYes", () => {
-  //   const s = [0, 1, 1, 0, 1, 1, 7, 1, 0, 1];
-  //   const split = new Split(s);
-  //   expect(split.jude()).toBe("Yes");
-  // });
+  test("1 番目のピンが倒れていたら次のピンで左方向でSplitだったらYes", () => {
+    const s = [0, 1, 1, 0, 1, 1, 1, 1, 0, 1];
+    const split = new Split(s);
+    expect(split.jude()).toBe("Yes");
+  });
 });

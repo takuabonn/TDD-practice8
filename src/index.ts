@@ -70,20 +70,28 @@ class Split {
       if (pinIndex === 0) {
         continue;
       }
+      let rightDirectionFlag = true;
+      let leftDirectionFlag = true;
       const pin_number = pinIndex + 1;
       const { right, left } = pinPositionalRelationship[pin_number];
       for (let i = 0; i < right.length; i++) {
-        const nextLanePins = right[0];
+        const nextRightLanePins = right[0];
         for (
           let nextLanePinIndex = 0;
-          nextLanePinIndex < nextLanePins.length;
+          nextLanePinIndex < nextRightLanePins.length;
           nextLanePinIndex++
         ) {
-          const pinIndex = nextLanePins[nextLanePinIndex] - 1;
+          const pinIndex = nextRightLanePins[nextLanePinIndex] - 1;
           if (this.s[pinIndex]) {
-            return "No";
+            // return "No";
+            rightDirectionFlag = false;
+            break;
           }
         }
+        if (!rightDirectionFlag) {
+          break;
+        }
+
         const otherThanRightBesideLanePins = right[1];
         for (
           let otherThanRightBesideLanePinIndex = 0;
@@ -94,10 +102,49 @@ class Split {
           const pinIndex =
             otherThanRightBesideLanePins[otherThanRightBesideLanePinIndex] - 1;
           if (this.s[pinIndex]) {
-            return "Yes";
+            // return "Yes";
+            rightDirectionFlag = true;
           }
         }
       }
+
+      for (let i = 0; i < left.length; i++) {
+        const nextLeftLanePins = left[0];
+        for (
+          let nextLanePinIndex = 0;
+          nextLanePinIndex < nextLeftLanePins.length;
+          nextLanePinIndex++
+        ) {
+          const pinIndex = nextLeftLanePins[nextLanePinIndex] - 1;
+          if (this.s[pinIndex]) {
+            // return "No";
+            leftDirectionFlag = false;
+            break;
+          }
+        }
+        if (!leftDirectionFlag) {
+          break;
+        }
+
+        const otherThanLeftBesideLanePins = left[1];
+        for (
+          let otherThanLeftBesideLanePinIndex = 0;
+          otherThanLeftBesideLanePinIndex < otherThanLeftBesideLanePins.length;
+          otherThanLeftBesideLanePinIndex++
+        ) {
+          const pinIndex =
+            otherThanLeftBesideLanePins[otherThanLeftBesideLanePinIndex] - 1;
+          if (this.s[pinIndex]) {
+            // return "Yes";
+            leftDirectionFlag = true;
+          }
+        }
+      }
+
+      if (rightDirectionFlag || leftDirectionFlag) {
+        return "Yes";
+      }
+      return "No";
     }
   }
 }
