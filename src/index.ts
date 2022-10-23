@@ -6,10 +6,7 @@ interface PinPositionalRelationship {
 }
 const pinPositionalRelationship: PinPositionalRelationship = {
   2: {
-    right: [
-      [1, 5],
-      [3, 9, 6, 10],
-    ],
+    right: [[5], [3, 9, 6, 10]],
     left: [[4], [7]],
   },
   3: {
@@ -67,14 +64,20 @@ class Split {
       return "No";
     }
     for (let pinIndex = 0; pinIndex < this.s.length; pinIndex++) {
-      if (pinIndex === 0) {
+      if (pinIndex === 0 || !this.s[pinIndex]) {
         continue;
       }
-      let rightDirectionFlag = true;
-      let leftDirectionFlag = true;
+      let rightDirectionFlag = false;
+      let leftDirectionFlag = false;
+      let rightTwoDirectionFlag = false;
+      let leftTwoDirectionFlag = false;
       const pin_number = pinIndex + 1;
       const { right, left } = pinPositionalRelationship[pin_number];
-      for (let i = 0; i < right.length; i++) {
+      // if (!right.length || !left.length) {
+      //   continue;
+      // }
+
+      if (right.length) {
         const nextRightLanePins = right[0];
         for (
           let nextLanePinIndex = 0;
@@ -82,33 +85,30 @@ class Split {
           nextLanePinIndex++
         ) {
           const pinIndex = nextRightLanePins[nextLanePinIndex] - 1;
-          if (this.s[pinIndex]) {
-            // return "No";
-            rightDirectionFlag = false;
-            break;
+          if (!this.s[pinIndex]) {
+            rightDirectionFlag = true;
           }
         }
-        if (!rightDirectionFlag) {
-          break;
-        }
 
-        const otherThanRightBesideLanePins = right[1];
-        for (
-          let otherThanRightBesideLanePinIndex = 0;
-          otherThanRightBesideLanePinIndex <
-          otherThanRightBesideLanePins.length;
-          otherThanRightBesideLanePinIndex++
-        ) {
-          const pinIndex =
-            otherThanRightBesideLanePins[otherThanRightBesideLanePinIndex] - 1;
-          if (this.s[pinIndex]) {
-            // return "Yes";
-            rightDirectionFlag = true;
+        if (rightDirectionFlag && right[1]) {
+          const otherThanRightBesideLanePins = right[1];
+          for (
+            let otherThanRightBesideLanePinIndex = 0;
+            otherThanRightBesideLanePinIndex <
+            otherThanRightBesideLanePins.length;
+            otherThanRightBesideLanePinIndex++
+          ) {
+            const pinIndex =
+              otherThanRightBesideLanePins[otherThanRightBesideLanePinIndex] -
+              1;
+            if (this.s[pinIndex]) {
+              rightTwoDirectionFlag = true;
+            }
           }
         }
       }
 
-      for (let i = 0; i < left.length; i++) {
+      if (left.length) {
         const nextLeftLanePins = left[0];
         for (
           let nextLanePinIndex = 0;
@@ -116,36 +116,36 @@ class Split {
           nextLanePinIndex++
         ) {
           const pinIndex = nextLeftLanePins[nextLanePinIndex] - 1;
-          if (this.s[pinIndex]) {
+          if (!this.s[pinIndex]) {
             // return "No";
-            leftDirectionFlag = false;
-            break;
-          }
-        }
-        if (!leftDirectionFlag) {
-          break;
-        }
-
-        const otherThanLeftBesideLanePins = left[1];
-        for (
-          let otherThanLeftBesideLanePinIndex = 0;
-          otherThanLeftBesideLanePinIndex < otherThanLeftBesideLanePins.length;
-          otherThanLeftBesideLanePinIndex++
-        ) {
-          const pinIndex =
-            otherThanLeftBesideLanePins[otherThanLeftBesideLanePinIndex] - 1;
-          if (this.s[pinIndex]) {
-            // return "Yes";
             leftDirectionFlag = true;
           }
         }
+
+        if (leftDirectionFlag && left[1]) {
+          const otherThanLeftBesideLanePins = left[1];
+          for (
+            let otherThanLeftBesideLanePinIndex = 0;
+            otherThanLeftBesideLanePinIndex <
+            otherThanLeftBesideLanePins.length;
+            otherThanLeftBesideLanePinIndex++
+          ) {
+            const pinIndex =
+              otherThanLeftBesideLanePins[otherThanLeftBesideLanePinIndex] - 1;
+            if (this.s[pinIndex]) {
+              leftTwoDirectionFlag = true;
+            }
+          }
+        }
       }
 
-      if (rightDirectionFlag || leftDirectionFlag) {
+      const rightF = rightDirectionFlag && rightTwoDirectionFlag;
+      const leftF = leftDirectionFlag && leftTwoDirectionFlag;
+      if (rightF || leftF) {
         return "Yes";
       }
-      return "No";
     }
+    return "No";
   }
 }
 
