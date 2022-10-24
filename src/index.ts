@@ -67,27 +67,28 @@ class Split {
       if (pinIndex === 0 || !this.s[pinIndex]) {
         continue;
       }
+
       let rightDirectionFlag = false;
       let leftDirectionFlag = false;
       let rightTwoDirectionFlag = false;
       let leftTwoDirectionFlag = false;
       const pin_number = pinIndex + 1;
       const { right, left } = pinPositionalRelationship[pin_number];
-      // if (!right.length || !left.length) {
-      //   continue;
-      // }
 
       if (right.length) {
+        let number_of_lyingDownPin = 0;
         const nextRightLanePins = right[0];
         for (
           let nextLanePinIndex = 0;
           nextLanePinIndex < nextRightLanePins.length;
           nextLanePinIndex++
         ) {
-          const pinIndex = nextRightLanePins[nextLanePinIndex] - 1;
-          if (!this.s[pinIndex]) {
-            rightDirectionFlag = true;
+          if (!this.s[nextRightLanePins[nextLanePinIndex] - 1]) {
+            number_of_lyingDownPin = number_of_lyingDownPin + 1;
           }
+        }
+        if (number_of_lyingDownPin === nextRightLanePins.length) {
+          rightDirectionFlag = true;
         }
 
         if (rightDirectionFlag && right[1]) {
@@ -109,17 +110,20 @@ class Split {
       }
 
       if (left.length) {
+        let number_of_lyingDownPin = 0;
         const nextLeftLanePins = left[0];
         for (
           let nextLanePinIndex = 0;
           nextLanePinIndex < nextLeftLanePins.length;
           nextLanePinIndex++
         ) {
-          const pinIndex = nextLeftLanePins[nextLanePinIndex] - 1;
-          if (!this.s[pinIndex]) {
+          if (!this.s[nextLeftLanePins[nextLanePinIndex] - 1]) {
             // return "No";
-            leftDirectionFlag = true;
+            number_of_lyingDownPin = number_of_lyingDownPin + 1;
           }
+        }
+        if (number_of_lyingDownPin === nextLeftLanePins.length) {
+          leftDirectionFlag = true;
         }
 
         if (leftDirectionFlag && left[1]) {
