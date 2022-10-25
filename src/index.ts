@@ -59,6 +59,35 @@ class Split {
   constructor(s: number[]) {
     this.s = s;
   }
+  private lyingDownNextLanePin(nextLanePins: number[]) {
+    let number_of_lyingDownPin = 0;
+    for (
+      let nextLanePinIndex = 0;
+      nextLanePinIndex < nextLanePins.length;
+      nextLanePinIndex++
+    ) {
+      if (!this.s[nextLanePins[nextLanePinIndex] - 1]) {
+        number_of_lyingDownPin = number_of_lyingDownPin + 1;
+      }
+    }
+    return number_of_lyingDownPin === nextLanePins.length;
+  }
+
+  private existsOtherThanBesideLanePin(otherThanBesideLanePin: number[]) {
+    for (
+      let otherThanRightBesideLanePinIndex = 0;
+      otherThanRightBesideLanePinIndex < otherThanBesideLanePin.length;
+      otherThanRightBesideLanePinIndex++
+    ) {
+      const pinIndex =
+        otherThanBesideLanePin[otherThanRightBesideLanePinIndex] - 1;
+      if (this.s[pinIndex]) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   jude() {
     if (this.s[0]) {
       return "No";
@@ -68,83 +97,36 @@ class Split {
         continue;
       }
 
-      let rightDirectionFlag = false;
-      let leftDirectionFlag = false;
-      let rightTwoDirectionFlag = false;
-      let leftTwoDirectionFlag = false;
+      let nothingRightNextLanePin = false;
+      let nothingLeftNextLanePin = false;
+      let thereIsPinRightNextLaneOnwards = false;
+      let thereIsPinLeftNextLaneOnwards = false;
       const pin_number = pinIndex + 1;
       const { right, left } = pinPositionalRelationship[pin_number];
 
       if (right.length) {
-        let number_of_lyingDownPin = 0;
-        const nextRightLanePins = right[0];
-        for (
-          let nextLanePinIndex = 0;
-          nextLanePinIndex < nextRightLanePins.length;
-          nextLanePinIndex++
-        ) {
-          if (!this.s[nextRightLanePins[nextLanePinIndex] - 1]) {
-            number_of_lyingDownPin = number_of_lyingDownPin + 1;
-          }
-        }
-        if (number_of_lyingDownPin === nextRightLanePins.length) {
-          rightDirectionFlag = true;
-        }
+        nothingRightNextLanePin = this.lyingDownNextLanePin(right[0]);
 
-        if (rightDirectionFlag && right[1]) {
-          const otherThanRightBesideLanePins = right[1];
-          for (
-            let otherThanRightBesideLanePinIndex = 0;
-            otherThanRightBesideLanePinIndex <
-            otherThanRightBesideLanePins.length;
-            otherThanRightBesideLanePinIndex++
-          ) {
-            const pinIndex =
-              otherThanRightBesideLanePins[otherThanRightBesideLanePinIndex] -
-              1;
-            if (this.s[pinIndex]) {
-              rightTwoDirectionFlag = true;
-            }
-          }
+        if (nothingRightNextLanePin && right[1]) {
+          thereIsPinRightNextLaneOnwards = this.existsOtherThanBesideLanePin(
+            right[1]
+          );
         }
       }
 
       if (left.length) {
-        let number_of_lyingDownPin = 0;
-        const nextLeftLanePins = left[0];
-        for (
-          let nextLanePinIndex = 0;
-          nextLanePinIndex < nextLeftLanePins.length;
-          nextLanePinIndex++
-        ) {
-          if (!this.s[nextLeftLanePins[nextLanePinIndex] - 1]) {
-            // return "No";
-            number_of_lyingDownPin = number_of_lyingDownPin + 1;
-          }
-        }
-        if (number_of_lyingDownPin === nextLeftLanePins.length) {
-          leftDirectionFlag = true;
-        }
+        nothingLeftNextLanePin = this.lyingDownNextLanePin(left[0]);
 
-        if (leftDirectionFlag && left[1]) {
-          const otherThanLeftBesideLanePins = left[1];
-          for (
-            let otherThanLeftBesideLanePinIndex = 0;
-            otherThanLeftBesideLanePinIndex <
-            otherThanLeftBesideLanePins.length;
-            otherThanLeftBesideLanePinIndex++
-          ) {
-            const pinIndex =
-              otherThanLeftBesideLanePins[otherThanLeftBesideLanePinIndex] - 1;
-            if (this.s[pinIndex]) {
-              leftTwoDirectionFlag = true;
-            }
-          }
+        if (nothingLeftNextLanePin && left[1]) {
+          thereIsPinLeftNextLaneOnwards = this.existsOtherThanBesideLanePin(
+            left[1]
+          );
         }
       }
 
-      const rightF = rightDirectionFlag && rightTwoDirectionFlag;
-      const leftF = leftDirectionFlag && leftTwoDirectionFlag;
+      const rightF = nothingRightNextLanePin && thereIsPinRightNextLaneOnwards;
+      const leftF = nothingLeftNextLanePin && thereIsPinLeftNextLaneOnwards;
+
       if (rightF || leftF) {
         return "Yes";
       }

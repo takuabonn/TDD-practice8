@@ -48,14 +48,4 @@ describe("split", () => {
     const split = new Split(s);
     expect(split.jude()).toBe("No");
   });
-  // test("57 Yes", () => {
-  //   const s = [0, 0, 0, 0, 1, 0, 1, 0, 0, 0];
-  //   const split = new Split(s);
-  //   expect(split.jude()).toBe("Yes");
-  // });
-  // test("46 Yes", () => {
-  //   const s = [0, 1, 0, 0, 0, 0, 0, 0, 0, 1];
-  //   const split = new Split(s);
-  //   expect(split.jude()).toBe("Yes");
-  // });
 });
